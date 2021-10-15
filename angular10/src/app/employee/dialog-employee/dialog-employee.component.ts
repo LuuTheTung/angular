@@ -2,14 +2,14 @@ import { Component, OnInit, Input, Inject } from '@angular/core';
 import {SharedService} from 'src/app/shared.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormControl, Validators} from '@angular/forms';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-dialog-employee',
   templateUrl: './dialog-employee.component.html',
   styleUrls: ['./dialog-employee.component.css']
 })
 export class DialogEmployeeComponent implements OnInit {
-  constructor(private service:SharedService, private dialogRef: MatDialogRef<DialogEmployeeComponent>, @Inject(MAT_DIALOG_DATA) data) {
+  constructor(private service:SharedService, private dialogRef: MatDialogRef<DialogEmployeeComponent>, @Inject(MAT_DIALOG_DATA) data, private _snackBar: MatSnackBar) {
 
     this.description = data.title;
     this.emp = data.emp;
@@ -51,27 +51,31 @@ export class DialogEmployeeComponent implements OnInit {
   }
 
   addEmployee(){
-    var val = {EmployeeId:this.EmployeeId,
-                EmployeeName:this.EmployeeName,
-                Department:this.Department,
-              DateOfJoining:this.DateOfJoining,
-            PhotoFileName:this.PhotoFileName};
+    var val = {
+      EmployeeId:this.EmployeeId,
+      EmployeeName:this.EmployeeName,
+      Department:this.Department,
+      DateOfJoining:this.DateOfJoining,
+      PhotoFileName:this.PhotoFileName
+    };
 
     this.service.addEmployee(val).subscribe(res=>{
-      alert(res.toString());
-      this.dialogRef.close();
+    this._snackBar.open(res.toString(),'',{duration: 5000});
+    this.dialogRef.close();
     });
   }
 
   updateEmployee(){
-    var val = {EmployeeId:this.EmployeeId,
+    var val = {
+      EmployeeId:this.EmployeeId,
       EmployeeName:this.EmployeeName,
       Department:this.Department,
-    DateOfJoining:this.DateOfJoining,
-  PhotoFileName:this.PhotoFileName};
+      DateOfJoining:this.DateOfJoining,
+      PhotoFileName:this.PhotoFileName
+    };
 
     this.service.updateEmployee(val).subscribe(res=>{
-    alert(res.toString());
+    this._snackBar.open(res.toString(),'',{duration: 5000});
     this.dialogRef.close();
     });
   }
