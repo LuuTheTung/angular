@@ -6,8 +6,16 @@ import {DepartmentComponent} from './department/department.component';
 
 
 const routes: Routes = [
-{path:'employee',component:EmployeeComponent},
-{path:'department',component:DepartmentComponent}
+  {
+    path:'employee',
+    // component:EmployeeComponent
+    loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule)
+  },
+  {
+    path:'department',
+    // component:DepartmentComponent,
+    loadChildren: () => import('./department/department.module').then((m) => m.DepartmentModule),
+  }
 
 ];
 

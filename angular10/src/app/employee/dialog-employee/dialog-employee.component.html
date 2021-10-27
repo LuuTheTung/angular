@@ -1,4 +1,5 @@
-<h1 mat-dialog-title style="border-bottom: 1px solid;padding-bottom: 5px;">{{this.description}}</h1>
+<form [formGroup]="createEmpForm" (ngSubmit)="save()">
+  <h1 mat-dialog-title style="border-bottom: 1px solid;padding-bottom: 5px;">{{this.description}}</h1>
 <div mat-dialog-content style="padding-bottom: 10px;">
   <div class="row">
     <div class="col-lg-6">
@@ -6,11 +7,9 @@
         <div class="col-sm-12">
           <mat-form-field style="width: 100%;">
             <mat-label>Employee Name</mat-label>
-            <input matInput [(ngModel)]="EmployeeName" required [formControl]="nameFormControl"/>
-            <button mat-button *ngIf="EmployeeName" matSuffix mat-icon-button aria-label="Clear" (click)="EmployeeName=''">
-              <mat-icon>close</mat-icon>
-            </button>
-            <mat-error *ngIf="nameFormControl.hasError('required')">
+            <input matInput formControlName="nameFormControl" 
+            [ngClass]="{ 'is-invalid': showErrorRequired('nameFormControl') }"/>
+            <mat-error *ngIf="showErrorRequired('nameFormControl')">
               Employee name is <strong>required</strong>
             </mat-error>
             </mat-form-field>
@@ -18,19 +17,26 @@
         <div class="col-sm-12">
           <mat-form-field style="width: 100%;">
             <mat-label>Department</mat-label>
-            <mat-select  [(ngModel)]="Department">
+            <mat-select formControlName="deptFormControl" [ngClass]="{ 'is-invalid': showErrorRequired('nameFormControl') }">
               <mat-option *ngFor="let depName of DepartmentsList" [value]="depName.DepartmentName">
                 {{depName.DepartmentName}}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="showErrorRequired('deptFormControl')">
+              Department is <strong>required</strong>
+            </mat-error>
             </mat-form-field>
         </div>
         <div class="col-sm-12">
           <mat-form-field style="width: 100%;">
             <mat-label>Date of joining</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="DateOfJoining" required/>
+            <input matInput [matDatepicker]="picker" formControlName="dateFormControl"
+            [ngClass]="{ 'is-invalid': showErrorRequired('dateFormControl') }"/>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="showErrorRequired('dateFormControl')">
+              Date is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -39,18 +45,17 @@
     <div class="col-lg-6">
       <div class="row ml-3 bd-highlight" style="width: 85%;">
         <img [src]=PhotoFilePath *ngIf="PhotoFilePath" height="300px;" width="250px;">
-        <input type="file" (change)="uploadPhoto($event)" class="mt-2"/>
+        <input type="file" (change)="uploadPhoto($event)" class="mt-2" formControlName="photoFormControl"/>
       </div>
     </div>
   </div>
 </div>
 <mat-dialog-actions align="center" style="border-top: 1px solid;">
   <button mat-raised-button mat-dialog-close>Cancel</button>
-  <button (click)="addEmployee()" *ngIf="this.add==0" mat-flat-button color="primary" [disabled]="!nameFormControl.valid">
-    Add
-  </button>
-  <button (click)="updateEmployee()" *ngIf="this.add!=0" mat-flat-button color="primary" [disabled]="!nameFormControl.valid">
-      Update
+  <button type="submit" mat-flat-button color="primary">
+    Save
   </button>
 </mat-dialog-actions>
+</form>
+
 
